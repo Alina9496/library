@@ -1,0 +1,366 @@
+openapi: 3.0.0
+info:
+  title: Music Library API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/songs:
+    get:
+      summary: Get songs with filtering and pagination
+      parameters:
+        - in: query
+          name: group
+          schema:
+            type: string
+            example: "L"
+        - in: query
+          name: name
+          schema:
+            type: string
+            example: "P"
+        - in: query
+          name: link
+          schema:
+            type: string
+            example: "https://lyrsense.com"
+        - in: query
+          name: release_date
+          schema:
+            type: string
+            format: date
+            example: "2006-01-01"
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            example: 0
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        group:
+                          type: string
+                          example: "Lady Gaga"
+                        name:
+                          type: string
+                          example: "Poker Face"
+                        link:
+                          type: string
+                          example: "https://lyrsense.com/lady_gaga/poker_face"
+                        release_date:
+                          type: string
+                          format: date
+                          example: "2008-09-23"
+        '400':
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input"
+        '404':
+          description: Song not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "song not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+
+  /api/v1/song:
+    post:
+      summary: Create a new song
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: string
+                  example: "Lady Gaga"
+                name:
+                  type: string
+                  example: "Poker Face"
+                link:
+                  type: string
+                  example: "https://genius.com/Lady-gaga-poker-face-lyrics"
+                text:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: "verse"
+                      text:
+                        type: string
+                        example: "I wanna hold 'em like they do in Texas, please (Woo)"
+                release_date:
+                  type: string
+                  format: date
+                  example: "2008-09-23"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "id"
+        '400':
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+
+  /api/v1/song/{id}:
+    get:
+      summary: Get song lyrics with pagination
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: "123"
+        - in: query
+          name: group
+          required: true
+          schema:
+            type: string
+            example: "Lady Gaga"
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+            example: "Poker Face"
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "I wanna hold 'em like they do in Texas, please (Woo)"
+        '400':
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input"
+        '404':
+          description: Song not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "song not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+
+    patch:
+      summary: Update an existing song
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: "123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: string
+                  example: "Lady Gaga"
+                name:
+                  type: string
+                  example: "Poker Face"
+                link:
+                  type: string
+                  example: "https://lyrsense.com/lady_gaga/poker_face"
+                release_date:
+                  type: string
+                  format: date
+                  example: "2008-09-23"
+                text:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: "verse"
+                      text:
+                        type: string
+                        example: "I wanna hold 'em like they do in Texas, please (Woo)"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "ok"
+        '400':
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input"
+        '404':
+          description: Song not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "song not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+
+    delete:
+      summary: Delete a song
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: "123"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "ok"
+        '400':
+          description: Incorrect data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input"
+        '404':
+          description: Song not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "song not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
